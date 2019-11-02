@@ -23,5 +23,8 @@ sudo snap install vlc
 gsettings set org.compiz.core:/org/compiz/profiles/unity/plugins/core/ hsize 3
 gsettings set org.compiz.core:/org/compiz/profiles/unity/plugins/core/ vsize 3
 
+# Command to view items as list inside directories GUI
+gsettings set org.gnome.nautilus.preferences default-folder-viewer 'list-view'
+
 #TODO: copy bash_aliases into the proper directory
 #update bash_aliases
