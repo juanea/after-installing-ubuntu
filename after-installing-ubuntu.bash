@@ -18,7 +18,7 @@ sudo snap install code --classic
 sudo snap install gimp
 sudo snap install inkscape
 sudo snap install vlc
-
+sudo snap install okular
 # Multiple workspaces for ubuntu desktop
 gsettings set org.compiz.core:/org/compiz/profiles/unity/plugins/core/ hsize 3
 gsettings set org.compiz.core:/org/compiz/profiles/unity/plugins/core/ vsize 3
