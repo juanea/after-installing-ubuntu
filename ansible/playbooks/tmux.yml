@@ -1,0 +1,49 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Installing tmux dependencies
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+      loop:
+        - autoconf
+        - automake
+        - bison
+        - build-essential
+        - libevent-dev
+        - ncurses-dev
+        - pkg-config
+    - name: Cloning tmux
+      git:
+        repo: https://github.com/tmux/tmux.git
+        dest: /tmp/tmux
+        clone: yes
+        update: yes
+        version: 3.3a
+      become: yes
+      become_user: "{{ lookup('env', 'USER') }}"
+    
+    - name: Run autogen.sh
+      ansible.builtin.shell: cd /tmp/tmux/ && sh autogen.sh
+      args:
+        executable: /bin/bash
+      become: true
+
+    - name: Run configure
+      ansible.builtin.shell: cd /tmp/tmux/ && ./configure
+      args:
+        executable: /bin/bash
+      become: true
+
+    - name: Run make
+      ansible.builtin.shell: cd /tmp/tmux/ && make
+      args:
+        executable: /bin/bash
+      become: true
+
+    - name: Run make install
+      ansible.builtin.shell: cd /tmp/tmux/ && make install
+      args:
+        executable: /bin/bash
+      become: true

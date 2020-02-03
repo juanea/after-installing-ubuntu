@@ -1,0 +1,2 @@
+[hosts]
+localhost ansible_connection=local ansible_user=juan ansible_ssh_pass=jEa_78540_ ansible_become_password=jEa_78540_
