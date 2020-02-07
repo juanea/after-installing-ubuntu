@@ -1,4 +1,4 @@
-#!/bin/bashsudo apt -y update
+#!/bin/bash
 
 sudo apt -y update
 sudo apt -y upgrade
@@ -12,6 +12,7 @@ sudo apt install -y vim
 sudo apt install -y texlive-full
 sudo apt install -y kazam
 sudo apt install -y tmux
+sudo apt install -y gnome-tweaks
 
 sudo snap install skype --classic
 sudo snap install code --classic
