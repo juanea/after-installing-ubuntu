@@ -6,19 +6,21 @@ sudo apt -y full-upgrade
 sudo apt -y auto-remove
 
 sudo add-apt-repository ppa:git-core/ppa
+sudo add-apt-repository universe
 sudo apt -y update
 sudo apt install -y git
 sudo apt install -y vim
 sudo apt install -y texlive-full
 sudo apt install -y kazam
 sudo apt install -y tmux
+sudo apt install -y gnome-tweak-tool 
 
-sudo snap install skype --classic
 sudo snap install code --classic
 sudo snap install gimp
 sudo snap install inkscape
 sudo snap install vlc
 sudo snap install okular
+sudo snap install slack
 # Multiple workspaces for ubuntu desktop
 #gsettings set org.compiz.core:/org/compiz/profiles/unity/plugins/core/ hsize 3
 #gsettings set org.compiz.core:/org/compiz/profiles/unity/plugins/core/ vsize 3
