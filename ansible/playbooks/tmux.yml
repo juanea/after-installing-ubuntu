@@ -47,3 +47,17 @@
       args:
         executable: /bin/bash
       become: true
+
+    - name: TPM
+      git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: ~/.tmux/plugins/tpm
+        clone: yes
+        update: yes
+        version: v3.1.0
+      become: yes
+      become_user: "{{ lookup('env', 'USER') }}"
+
+    - name: Copy over the tmux.conf template
+      template: src=../templates/tmux.conf dest=~/.config/tmux/tmux.conf
+      become: no

@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Installing oh-my-zsh dependencies
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+      loop:
+        - wget
+    - name: Downloading oh-my-zsh 
+      ansible.builtin.shell: cd /tmp && wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+      args:
+        executable: /bin/bash
+      become: true
+    - name: Installing oh-my-zsh 
+      ansible.builtin.shell: cd /tmp && chmod +x install.sh
+      args:
+        executable: /bin/bash
+      become: true
+    - name: Installing oh-my-zsh 
+      ansible.builtin.shell: cd /tmp && sh install.sh
+      args:
+        executable: /bin/bash
+      become: false

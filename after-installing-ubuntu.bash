@@ -15,6 +15,8 @@ sudo apt install -y ansible \
                     neovim \
 		    openssh-client
 
+ansible-galaxy install viasite-ansible.zsh
+
 sudo systemctl enable ssh
 sudo ufw allow ssh
 

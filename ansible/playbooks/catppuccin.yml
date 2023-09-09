@@ -1,0 +1,29 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Run autogen.sh
+      ansible.builtin.shell: sudo add-apt-repository main && \
+                             sudo add-apt-repository universe && \
+                             sudo add-apt-repository restricted && \
+                             sudo add-apt-repository multiverse && \
+                             sudo apt update
+      args:
+        executable: /bin/bash
+      become: yes
+      become_user: "{{ lookup('env', 'USER') }}"
+
+    - name: Installing Catppuccin dependencies
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+      loop:
+        - dconf-editor
+        - dconf-cli
+
+    - name: Run autogen.sh
+      ansible.builtin.shell: cd /tmp && curl -L https://raw.githubusercontent.com/catppuccin/gnome-terminal/v0.2.0/install.py | python3 -
+      args:
+        executable: /bin/bash
+      become: yes
+      become_user: "{{ lookup('env', 'USER') }}"
