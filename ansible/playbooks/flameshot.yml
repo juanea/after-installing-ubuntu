@@ -1,0 +1,58 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Installing tmux dependencies
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+      loop:
+        - ninja-build
+        - g++
+        - cmake
+        - build-essential
+        - qtbase5-dev
+        - qttools5-dev-tools
+        - libqt5svg5-dev
+        - qttools5-dev
+        - libqt5dbus5
+        - libqt5network5
+        - libqt5core5a
+        - libqt5widgets5
+        - libqt5gui5
+        - libqt5svg5
+        - openssl
+        - ca-certificates
+    - name: Cloning flameshot
+      git:
+        repo: https://github.com/flameshot-org/flameshot.git
+        dest: /tmp/flameshot
+        clone: yes
+        update: yes
+        version: v12.1.0
+      become: yes
+      become_user: "{{ lookup('env', 'USER') }}"
+    
+    - name: Run configure
+      ansible.builtin.shell: cd /tmp/flameshot  && mkdir build
+      args:
+        executable: /bin/bash
+      become: true
+
+    - name: Run make
+      ansible.builtin.shell: cd /tmp/flameshot/build  && cmake -G Ninja ..
+      args:
+        executable: /bin/bash
+      become: true
+
+    - name: Run make install
+      ansible.builtin.shell: cd /tmp/flameshot/build && ninja install
+      args:
+        executable: /bin/bash
+      become: true
+    
+    - name: Run make install
+      ansible.builtin.shell: ldconfig
+      args:
+        executable: /bin/bash
+      become: true

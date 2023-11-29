@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Installing fzf dependencies
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+      loop:
+        - git
+    - name: Cloning fzf
+      git:
+        repo: https://github.com/junegunn/fzf.git
+        dest: ~/.fzf
+        clone: yes
+        update: yes
+        version: 0.43.0
+      become: yes
+      become_user: "{{ lookup('env', 'USER') }}"
+    
+    - name: Run autogen.sh
+      ansible.builtin.shell: cd ~/.fzf && /bin/bash ./install
+      args:
+        executable: /bin/bash
+      become_user: "{{ lookup('env', 'USER') }}"

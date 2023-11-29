@@ -1,0 +1,85 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    #- name: Installing tmux dependencies
+    #  apt:
+    #    name: "{{ item }}"
+    #    update_cache: yes
+    #  loop:
+    #    - ninja-build
+    #- name: Cloning tmux
+    #  git:
+    #    repo: https://gitlab.com/wireshark/wireshark.git
+    #    dest: /tmp/wireshark
+    #    clone: yes
+    #    update: yes
+    #    version: v4.1.0
+    #  become: yes
+    #  become_user: "{{ lookup('env', 'USER') }}"
+    #
+    #- name: Run autogen.sh
+    #  ansible.builtin.shell: cd /tmp/wireshark/tools && /bin/bash debian-setup.sh -y --install-optional --install-qt6-deps
+    #  args:
+    #    executable: /bin/bash
+    #  become: true
+
+    #- name: Run configure
+    #  ansible.builtin.shell: cd /tmp/wireshark/  && mkdir build
+    #  args:
+    #    executable: /bin/bash
+    #  become: true
+
+    #- name: Run make
+    #  ansible.builtin.shell: cd /tmp/wireshark/build  && cmake -G Ninja ..
+    #  args:
+    #    executable: /bin/bash
+    #  become: true
+
+    #- name: Run make install
+    #  ansible.builtin.shell: cd /tmp/wireshark/build && ninja install
+    #  args:
+    #    executable: /bin/bash
+    #  become: true
+    #
+    #- name: Run make install
+    #  ansible.builtin.shell: ldconfig
+    #  args:
+    #    executable: /bin/bash
+    #  become: true
+    # 
+    # - name: Run1
+    #   ansible.builtin.shell: sudo groupadd wireshark 
+    #   args:
+    #     executable: /bin/bash
+    #   become: true
+    
+    - name: Run2
+      ansible.builtin.shell: sudo usermod -a -G wireshark "{{ lookup('env', 'USER') }}"
+      args:
+        executable: /bin/bash
+      become: true
+    
+    - name: Run3
+      ansible.builtin.shell: sudo chgrp wireshark /usr/local/bin/dumpcap
+      args:
+        executable: /bin/bash
+      become: true
+    
+    - name: Run4
+      ansible.builtin.shell: sudo chmod o-rx /usr/local/bin/dumpcap
+      args:
+        executable: /bin/bash
+      become: true
+    
+    - name: Run5
+      ansible.builtin.shell: sudo setcap 'CAP_NET_RAW+eip CAP_NET_ADMIN+eip' /usr/local/bin/dumpcap
+      args:
+        executable: /bin/bash
+      become: true
+    
+    - name: Run6
+      ansible.builtin.shell: sudo getcap /usr/local/bin/dumpcap
+      args:
+        executable: /bin/bash
+      become: true

@@ -1,0 +1,17 @@
+---
+- name: Install useful applications
+  hosts: "*"
+  tasks:
+    - name: install iftop
+      apt:
+        name: iftop
+        state: present
+        update_cache: true
+      become: true
+    
+    - name: install v4l-utils
+      apt:
+        name: v4l-utils
+        state: present
+        update_cache: true
+      become: true

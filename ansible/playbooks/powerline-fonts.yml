@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Installing nerd-fonts dependencies
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+      loop:
+        - git
+    - name: Cloning nerd-fonts
+      git:
+        repo: https://github.com/powerline/fonts.git
+        dest: /tmp/powerline
+        clone: yes
+        update: yes
+        version: master
+      become: yes
+      become_user: "{{ lookup('env', 'USER') }}"
+    
+    - name: Run install.sh
+      ansible.builtin.shell: cd /tmp/powerline/ && /bin/bash install.sh
+      args:
+        executable: /bin/bash
+      become_user: "{{ lookup('env', 'USER') }}"

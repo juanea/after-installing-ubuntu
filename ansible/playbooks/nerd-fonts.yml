@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Installing nerd-fonts dependencies
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+      loop:
+        - git
+    - name: Cloning nerd-fonts
+      git:
+        repo: https://github.com/ryanoasis/nerd-fonts.git
+        dest: /tmp/nerd-fonts
+        clone: yes
+        update: yes
+        version: v3.0.2
+      become: yes
+      become_user: "{{ lookup('env', 'USER') }}"
+    
+    - name: Run install.sh
+      ansible.builtin.shell: cd /tmp/nerd-fonts/ && /bin/bash install.sh
+      args:
+        executable: /bin/bash
+      become_user: "{{ lookup('env', 'USER') }}"

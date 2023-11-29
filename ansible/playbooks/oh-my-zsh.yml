@@ -1,25 +1,28 @@
 ---
-- hosts: all
-  become: true
+- name: Install Oh My Zsh and set default shell
+  hosts: localhost
+  become: yes
   tasks:
-    - name: Installing oh-my-zsh dependencies
+    - name: Install Zsh
       apt:
-        name: "{{ item }}"
-        update_cache: yes
-      loop:
-        - wget
-    - name: Downloading oh-my-zsh 
-      ansible.builtin.shell: cd /tmp && wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+        name: zsh
+        state: present
+
+    - name: Change default shell to Zsh
+      command: chsh -s /bin/zsh "{{ ansible_user }}"
+
+    - name: Install git
+      apt:
+        name: git
+        state: present
+
+    - name: Clone Oh My Zsh repository
+      git:
+        repo: https://github.com/ohmyzsh/ohmyzsh.git
+        dest: ~/.oh-my-zsh
+        clone: yes
+
+    - name: Copy Oh My Zsh config
+      command: cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
       args:
-        executable: /bin/bash
-      become: true
-    - name: Installing oh-my-zsh 
-      ansible.builtin.shell: cd /tmp && chmod +x install.sh
-      args:
-        executable: /bin/bash
-      become: true
-    - name: Installing oh-my-zsh 
-      ansible.builtin.shell: cd /tmp && sh install.sh
-      args:
-        executable: /bin/bash
-      become: false
+        creates: ~/.zshrc

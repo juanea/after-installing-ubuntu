@@ -1,0 +1,9 @@
+---
+- name: Install Winbox Snap
+  hosts: localhost  # Assuming you are running this on the local machine
+  tasks:
+    - name: Install Winbox Snap
+      community.general.snap:
+        name: winbox
+        state: present
+      become: yes
