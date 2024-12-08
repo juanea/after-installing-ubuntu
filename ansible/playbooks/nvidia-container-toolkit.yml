@@ -1,0 +1,52 @@
+- hosts: "*"
+  become: true
+  vars:
+    nvidia_docker_repo_gpg_url: "{{ nvidia_docker_repo_base_url }}/gpgkey"
+    nvidia_docker_repo_base_url: "https://nvidia.github.io/nvidia-docker"
+    ubuntu_repo_file_name: "nvidia-docker.list"
+    ubuntu_repo_file_path: "/etc/apt/sources.list.d/{{ ubuntu_repo_file_name }}"
+  tasks:
+  - name: Add Nvidia repo gpg key
+    apt_key:
+      url: "{{ nvidia_docker_repo_gpg_url }}"
+      state: present
+
+  - name: Add Nvidia apt repo
+    get_url:
+      url: "{{ nvidia_docker_repo_base_url }}/ubuntu22.04/{{ ubuntu_repo_file_name }}"
+      dest: "{{ ubuntu_repo_file_path }}"
+      mode: 0644
+
+  - name: Install Nvidia container runtime and toolkit
+    apt:
+      name:
+        - nvidia-container-runtime
+        - nvidia-container-toolkit
+      state: present
+      update_cache: yes
+
+  - name: Create a directory if it does not exist
+    ansible.builtin.file:
+      path: $HOME/.config/docker
+      state: directory
+      mode: '0755'
+    become_user: "{{ lookup('env', 'USER') }}"
+
+  - name: Run autogen.sh
+    ansible.builtin.shell: nvidia-ctk runtime configure --runtime=docker --config=$HOME/.config/docker/daemon.json
+    args:
+      executable: /bin/bash
+    become: yes
+    become_user: "{{ lookup('env', 'USER') }}"
+  
+  - name: Run autogen.sh
+    ansible.builtin.shell: systemctl restart docker
+    args:
+      executable: /bin/bash
+  
+  - name: Run autogen.sh
+    ansible.builtin.shell: nvidia-ctk config --set nvidia-container-cli.no-cgroups --in-place
+    args:
+      executable: /bin/bash
+    become: yes
+    become_user: "{{ lookup('env', 'USER') }}"

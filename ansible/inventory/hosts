@@ -1,2 +1,0 @@
-[hosts]
-localhost ansible_connection=local ansible_user= ansible_ssh_pass= ansible_become_password=

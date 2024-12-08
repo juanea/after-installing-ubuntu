@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Installing task dependencies
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+      loop:
+        - curl
+    
+    - name: Run autogen.sh
+      ansible.builtin.shell: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+      args:
+        executable: /bin/bash
+      become: yes
+      become_user: "{{ lookup('env', 'USER') }}"
