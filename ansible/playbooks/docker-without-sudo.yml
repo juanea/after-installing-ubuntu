@@ -1,15 +1,18 @@
 ---
-
 - name: Create docker group
-  group:
-    name: docker
-    state: present
+  hosts: all
   become: yes
+  become_user: root
 
-- name: Add user to the docker group
-  user:
-    name: "{{ item }}"
-    groups: docker
-    append: yes
-  with_items: "{{ non_root_docker_users }}"
-  become: yes
+  tasks:
+    - name: Create docker group
+      group:
+        name: docker
+        state: present
+
+    - name: Add user to the docker group
+      user:
+        name: "{{ item }}"
+        groups: docker
+        append: yes
+      with_items: "{{ ansible_user }}"

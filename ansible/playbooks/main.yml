@@ -1,0 +1,27 @@
+---
+- hosts: all
+  gather_facts: no
+
+  tasks:
+    - include:
+      - apt-dist.yml
+      - apt.yaml
+      - catppuccin.yml
+      - docker-without-sudo.yml
+      - docker.yml
+      - flameshot.yml
+      - fzf.yml
+      - nerd-fonts.yml
+      - nvidia-container-toolkit.yml
+      - oh-my-zsh.yml
+      - powerline-fonts.yml
+      - rust.yml
+      - snapd.yml
+      - task.yml
+      - tmux.yml
+      - useful-apps.yml
+      - via.yml
+      - vlc.yml
+      - winbox.yml
+      - wireshark.yml
+      - zsh.yml
