@@ -1,9 +1,58 @@
 ---
-- name: Install Winbox Snap
-  hosts: localhost  # Assuming you are running this on the local machine
+- name: Install WinBox (standalone) and add a Dock launcher
+  hosts: all
+  vars:
+    winbox_version: "4.1"
+    winbox_url: "https://download.mikrotik.com/routeros/winbox/{{ winbox_version }}/WinBox_Linux.zip"
+    winbox_install_dir: "{{ ansible_env.HOME }}/.local/opt/winbox"
+    winbox_desktop_dir: "{{ ansible_env.HOME }}/.local/share/applications"
   tasks:
-    - name: Install Winbox Snap
-      community.general.snap:
-        name: winbox
-        state: present
+    - name: Install unzip dependency
+      apt:
+        name: unzip
+        update_cache: yes
       become: yes
+
+    - name: Create WinBox install directory
+      ansible.builtin.file:
+        path: "{{ winbox_install_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Download and extract WinBox
+      ansible.builtin.unarchive:
+        src: "{{ winbox_url }}"
+        dest: "{{ winbox_install_dir }}"
+        remote_src: yes
+        creates: "{{ winbox_install_dir }}/WinBox"
+
+    - name: Ensure WinBox binary is executable
+      ansible.builtin.file:
+        path: "{{ winbox_install_dir }}/WinBox"
+        mode: "0755"
+
+    - name: Create applications directory
+      ansible.builtin.file:
+        path: "{{ winbox_desktop_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Create WinBox Dock launcher
+      ansible.builtin.copy:
+        dest: "{{ winbox_desktop_dir }}/winbox.desktop"
+        mode: "0755"
+        content: |
+          [Desktop Entry]
+          Type=Application
+          Name=WinBox
+          Comment=MikroTik WinBox
+          Exec={{ winbox_install_dir }}/WinBox
+          Icon={{ winbox_install_dir }}/assets/img/winbox.png
+          Terminal=false
+          Categories=Network;
+          StartupWMClass=WinBox
+
+    - name: Refresh desktop database
+      ansible.builtin.command: update-desktop-database "{{ winbox_desktop_dir }}"
+      changed_when: false
+      failed_when: false
